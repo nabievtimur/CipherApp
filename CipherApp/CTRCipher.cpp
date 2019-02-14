@@ -4,10 +4,14 @@
 Crypt::CTRCipher::CTRCipher() { }
 Crypt::CTRCipher::~CTRCipher() { }
 
-Crypt::CTRCipher::CTRCipher(uint32_t password, char* in, char* out, int block_size) {
-
+Crypt::CTRCipher::CTRCipher(uint32_t password, char* in, char* out, int blockSize) {
+	this->password = password;
+	this->in = in;
+	this->out = out;
+	this->blockCount = blockSize / 32;
+	this->counter = 0x0;
 }
 
-uint32_t * Crypt::CTRCipher::encryptBlock(uint32_t * block) {
-	return nullptr;
+wchar_t * Crypt::CTRCipher::encryptBlock(wchar_t* block) {
+	return block;
 }

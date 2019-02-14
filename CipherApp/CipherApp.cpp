@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 				switch (argv[i][1]) {
 				case 'p':
 					std::cout << "Option -p. ";
-					password = MathCore::CRC32(Utills::toWchar(argv[i + 1]), strlen(argv[i + 1])); // TODO	to toUTFWchar
+					password = MathCore::CRC32(Utills::toWchar(argv[i + 1], strlen(argv[i + 1])), strlen(argv[i + 1])); // TODO	to toUTFWchar
 					i++;
 					std::cout << "Password: " << argv[i] << "." << std::endl;
 					break;
@@ -132,5 +132,26 @@ int main(int argc, char* argv[]) {
 		std::cerr << "Unknown error";
 		return 1;
 	}
-	return 0; 
+	
+	int answer = 0;
+	if (reverse) {
+		answer = cipher->decrypt();
+	}
+	else {
+		answer = cipher->encrypt();
+	}
+	std::cout << answer;
+	switch (answer) {
+	case 0:
+		std::cout << "End work.";
+		return 0;
+	case 101:
+		std::cout << "Error read input file.";
+		return 1;
+	case 102:
+		std::cout << "Error create output file.";
+		return 1;
+	default:
+		return 1;
+	}
 }
