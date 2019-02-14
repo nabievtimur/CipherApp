@@ -1,12 +1,10 @@
 #include "pch.h"
 #include "Cipher.h"
 
-using namespace Crypt;
+Crypt::CTRCipher::CTRCipher() { }
+Crypt::CTRCipher::~CTRCipher() { }
 
-CTRCipher::CTRCipher() { }
-CTRCipher::~CTRCipher() { }
-
-CTRCipher::CTRCipher(uint32_t password, char* in, char* out, int block_size) {
+Crypt::CTRCipher::CTRCipher(uint32_t password, char* in, char* out, int block_size) {
 
 }
 

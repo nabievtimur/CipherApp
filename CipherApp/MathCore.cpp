@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "MathCore.h"
- 
-using namespace MathCore;
 
 uint32_t MathCore::CRC32(wchar_t * text, int size) {
 	uint32_t crc = 0x39282315;

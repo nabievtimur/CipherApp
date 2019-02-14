@@ -1,23 +1,21 @@
 #include "pch.h"
 #include "Cipher.h"
 
-using namespace Crypt;
+Crypt::Cipher::Cipher() { }
+Crypt::Cipher::~Cipher() { }
 
-Cipher::Cipher() { }
-Cipher::~Cipher() { }
-
-Cipher::Cipher(uint32_t password, char * in, char * out, int block_size) {
+Crypt::Cipher::Cipher(uint32_t password, char * in, char * out, int block_size) {
 
 }
 
-int Cipher::encrypt() {
+int Crypt::Cipher::encrypt() {
 	return 0;
 }
 
-int Cipher::decrypt() {
+int Crypt::Cipher::decrypt() {
 	return 0;
 }
 
-uint32_t * Cipher::encryptBlock(uint32_t * block) {
+uint32_t * Crypt::Cipher::encryptBlock(uint32_t * block) {
 	return nullptr;
 }

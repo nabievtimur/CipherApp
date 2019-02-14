@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Utills.h"
 
-using namespace Utills;
-
 wchar_t* Utills::toWchar(char * text) {
 	wchar_t* wtext = new wchar_t[strlen(text)];
 	for (int i = 0; i < strlen(text); i++) {
