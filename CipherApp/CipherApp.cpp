@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 				switch (argv[i][1]) {
 				case 'p':
 					std::cout << "Option -p. ";
-					password = MathCore::CRC32(Utills::toWchar(argv[i + 1], strlen(argv[i + 1])), strlen(argv[i + 1])); // TODO	to toUTFWchar
+					password = MathCore::CRC32(Utills::toUTFWchar(argv[i + 1], strlen(argv[i + 1])), strlen(argv[i + 1]));
 					i++;
 					std::cout << "Password: " << argv[i] << "." << std::endl;
 					break;
@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
 				case 'i':
 					if (argv[i][2] == 'v') {
 						std::cout << "Option -iv. ";
+						iv = MathCore::CRC32(Utills::toUTFWchar(argv[i + 1], strlen(argv[i + 1])), strlen(argv[i + 1]));
 					}
 					else {
 						std::cout << "Unknown option, probably you meant -iv." << std::endl;
@@ -140,7 +141,6 @@ int main(int argc, char* argv[]) {
 	else {
 		answer = cipher->encrypt();
 	}
-	std::cout << answer;
 	switch (answer) {
 	case 0:
 		std::cout << "End work.";

@@ -17,20 +17,20 @@ int Crypt::Cipher::encrypt() {
 	fin.seekg(0, std::ios::end);
 	long long size = fin.tellg();
 	fin.seekg(0);
-	char* buffer = new char[blockCount];
+	char* buffer = new char[blockCount * 4];
 	fin >> std::noskipws;
 
 	if (fin.is_open()) {
-		for (int i = 0; i * blockCount < size; i++) {
-			for (int j = 0; j < blockCount; j++) {
-				if (i * blockCount + j < size) {
+		for (int i = 0; i * blockCount * 4 < size; i++) {
+			for (int j = 0; j < blockCount * 4; j++) {
+				if (i * blockCount * 4 + j < size) {
 					fin >> buffer[j];
 				}
 				else {
 					buffer[j] = (char)0;
 				}
 			}
-			char* enBlock = Utills::toChar(this->encryptBlock(Utills::toWchar(buffer, blockCount)), blockCount);
+			char* enBlock = Utills::toChar(this->encryptBlock(Utills::toBlock(buffer, blockCount)), blockCount);
 			if (fout) {
 				for (int j = 0; j < blockCount * 4; j++) {
 					fout << enBlock[j];
@@ -51,13 +51,48 @@ int Crypt::Cipher::encrypt() {
 }
 
 int Crypt::Cipher::decrypt() {
-	return this->encrypt();
+	std::fstream fin(in, std::ios::in | std::ios::binary);
+	std::fstream fout(out, std::ios::out | std::ios::binary);
+	fin.seekg(0, std::ios::end);
+	long long size = fin.tellg();
+	fin.seekg(0);
+	char* buffer = new char[blockCount * 4];
+	fin >> std::noskipws;
+
+	if (fin.is_open()) {
+		for (int i = 0; i * blockCount * 4 < size; i++) {
+			for (int j = 0; j < blockCount * 4; j++) {
+				if (i * blockCount * 4 + j < size) {
+					fin >> buffer[j];
+				}
+				else {
+					buffer[j] = (char)0;
+				}
+			}
+			char* enBlock = Utills::toChar(this->decryptBlock(Utills::toBlock(buffer, blockCount)), blockCount);
+			if (fout) {
+				for (int j = 0; j < blockCount * 4; j++) {
+					fout << enBlock[j];
+				}
+			}
+			else {
+				fin.close();
+				return 102;
+			}
+		}
+	}
+	else {
+		return 101;
+	}
+	fin.close();
+	fout.close();
+	return 0;
 }
 
-wchar_t* Crypt::Cipher::encryptBlock(wchar_t* block) {
-	//wcahr_t* encryptBlock = new wcahr_t[blockCount];
-	//for (int i = 0; i < blockCount; i++) {
-	//	encryptBlock[i] = (wcahr_t)block[i];
-	//}
+uint32_t* Crypt::Cipher::encryptBlock(uint32_t* block) {
 	return block;
+}
+
+uint32_t * Crypt::Cipher::decryptBlock(uint32_t * block) {
+	return nullptr;
 }

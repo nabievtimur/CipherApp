@@ -16,7 +16,8 @@ namespace Crypt {
 		char* out;
 		int blockCount;
 
-		virtual wchar_t* encryptBlock(wchar_t* block);
+		virtual uint32_t* encryptBlock(uint32_t* block);
+		virtual uint32_t* decryptBlock(uint32_t* block);
 	};
 
 	class CTRCipher : public Cipher {
@@ -25,8 +26,9 @@ namespace Crypt {
 		CTRCipher(uint32_t password, char* in, char* out, int blockSize);
 		~CTRCipher();
 	private:
-		uint32_t* counter;
-		wchar_t* encryptBlock(wchar_t* block) override;
+		uint32_t counter;
+		uint32_t* encryptBlock(uint32_t* block) override;
+		uint32_t* decryptBlock(uint32_t* block) override;
 	};
 
 	class OFBCipher : public Cipher	{
@@ -36,7 +38,8 @@ namespace Crypt {
 		~OFBCipher();
 	private:
 		uint32_t iv;
-		wchar_t* encryptBlock(wchar_t* block) override;
+		uint32_t* encryptBlock(uint32_t* block) override;
+		uint32_t* decryptBlock(uint32_t* block) override;
 	};
 }
 
