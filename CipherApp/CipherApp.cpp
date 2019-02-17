@@ -5,7 +5,7 @@ enum Mode { OFB, CTR };
 int main(int argc, char* argv[]) {
 	Mode mode = CTR;
 	int block_size = 32;
-	uint32_t iv = NULL;
+	char* iv = NULL;
 	uint32_t password = NULL;
 	char* in = nullptr;
 	char* out = nullptr;
@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 	for (int i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			if (i + 1 >= argc) {
-				std::cout << "Input meaning of option " << argv[i] << "." << std::endl;
+				std::cerr << "Input meaning of option " << argv[i] << "." << std::endl;
 			}
 			else {
 				switch (argv[i][1]) {
@@ -32,12 +32,12 @@ int main(int argc, char* argv[]) {
 					std::cout << "Option -b. ";
 					int b = std::atoi(argv[i + 1]);
 					if (b % 32 != 0) {
-						std::cout << "Input the number of block size which is divisible by 32." << std::endl;
+						std::cerr << "Input the number of block size which is divisible by 32." << std::endl;
 						return 1;
 					}
 					else {
 						if (b == 0) {
-							std::cout << "Error parse block size." << std::endl;
+							std::cerr << "Error parse block size." << std::endl;
 							return 1;
 						}
 						block_size = b;
@@ -51,14 +51,14 @@ int main(int argc, char* argv[]) {
 					switch (argv[i + 1][0]) {
 					case 'O':
 						mode = OFB;
-						std::cout << "Mode: OFB." << std::endl;
+						std::cout << "Mode: OFB" << std::endl;
 						break;
 					case 'C':
 						mode = CTR;
-						std::cout << "Mode: CTR." << std::endl;
+						std::cout << "Mode: CTR" << std::endl;
 						break;
 					default:
-						std::cout << "Unknown mode, probably you meant OFB or CTR." << std::endl;
+						std::cerr << "Unknown mode, probably you meant OFB or CTR." << std::endl;
 						return 1;
 					}
 					i++;
@@ -66,10 +66,11 @@ int main(int argc, char* argv[]) {
 				case 'i':
 					if (argv[i][2] == 'v') {
 						std::cout << "Option -iv. ";
-						iv = MathCore::CRC32(Utills::toUTFWchar(argv[i + 1], strlen(argv[i + 1])), strlen(argv[i + 1]));
+						iv = argv[i + 1];
+						std::cout << "Initialize vectore: " << argv[i + 1] << "." << std::endl;
 					}
 					else {
-						std::cout << "Unknown option, probably you meant -iv." << std::endl;
+						std::cerr << "Unknown option, probably you meant -iv." << std::endl;
 					}
 					break;
 				case 'f':
@@ -79,7 +80,7 @@ int main(int argc, char* argv[]) {
 						in = argv[i + 1];
 						std::ifstream file(in);
 						if (!file.is_open()) {
-							std::cout << "Error input file";
+							std::cerr << "Error input file";
 							return 1;
 						}
 						std::cout << "Input file: " << in << std::endl;
@@ -93,31 +94,31 @@ int main(int argc, char* argv[]) {
 						i++;
 						break;
 					default:
-						std::cout << "Unknown option, probably you meant -fo or -fi." << std::endl;
+						std::cerr << "Unknown option, probably you meant -fo or -fi." << std::endl;
 						return 1;
 					}
 					break;
 				default:
-					std::cout << "Unknown option." << std::endl;
+					std::cerr << "Unknown option." << std::endl;
 				}
 			}
 		}
 	}
 
 	if (in == nullptr) {
-		std::cout << "Enter input file";
+		std::cout << "Enter input file -fi";
 		return 1;
 	}
 	else if (out == nullptr) {
-		std::cout << "Enter output file";
+		std::cout << "Enter output file -fo";
 		return 1;
 	}
 	else if (password == NULL) {
-		std::cout << "Enter password";
+		std::cout << "Enter password -p";
 		return 1;
 	}
 	else if (mode == OFB && iv == NULL) {
-		std::cout << "Enter initialize vector";
+		std::cout << "Enter initialize vector -iv";
 		return 1;
 	}
 
@@ -133,23 +134,20 @@ int main(int argc, char* argv[]) {
 		std::cerr << "Unknown error";
 		return 1;
 	}
-	
-	int answer = 0;
-	if (reverse) {
-		answer = cipher->decrypt();
+	int answer = cipher->checkOptions();
+	if (answer != 0) {
+		return answer;
 	}
-	else {
-		answer = cipher->encrypt();
-	}
+	reverse ? answer = cipher->decrypt() : answer = cipher->encrypt();
 	switch (answer) {
 	case 0:
-		std::cout << "End work.";
+		std::cout << "Success.";
 		return 0;
 	case 101:
-		std::cout << "Error read input file.";
+		std::cerr << "Error read input file.";
 		return 1;
 	case 102:
-		std::cout << "Error create output file.";
+		std::cerr << "Error create output file.";
 		return 1;
 	default:
 		return 1;

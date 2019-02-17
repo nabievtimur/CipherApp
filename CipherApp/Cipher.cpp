@@ -12,8 +12,8 @@ Crypt::Cipher::Cipher(uint32_t password, char * in, char * out, int blockSize) {
 }
 
 int Crypt::Cipher::encrypt() {
-	std::fstream fin(in, std::ios::in | std::ios::binary);
-	std::fstream fout(out, std::ios::out | std::ios::binary);
+	std::fstream fin(this->in, std::ios::in | std::ios::binary);
+	std::fstream fout(this->out, std::ios::out | std::ios::binary);
 	fin.seekg(0, std::ios::end);
 	long long size = fin.tellg();
 	fin.seekg(0);
@@ -21,7 +21,7 @@ int Crypt::Cipher::encrypt() {
 	fin >> std::noskipws;
 
 	if (fin.is_open()) {
-		for (int i = 0; i * blockCount * 4 < size; i++) {
+		for (long long  i = 0; i * blockCount * 4 < size; i++) {
 			for (int j = 0; j < blockCount * 4; j++) {
 				if (i * blockCount * 4 + j < size) {
 					fin >> buffer[j];
@@ -86,6 +86,10 @@ int Crypt::Cipher::decrypt() {
 	}
 	fin.close();
 	fout.close();
+	return 0;
+}
+
+int Crypt::Cipher::checkOptions() {
 	return 0;
 }
 

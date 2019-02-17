@@ -9,6 +9,7 @@ namespace Crypt {
 		~Cipher();
 		int encrypt();
 		int decrypt();
+		virtual int checkOptions();
 
 	protected:
 		uint32_t password;
@@ -34,10 +35,12 @@ namespace Crypt {
 	class OFBCipher : public Cipher	{
 	public:
 		OFBCipher();
-		OFBCipher(uint32_t password, char* in, char* out, int blockSize, uint32_t iv);
+		OFBCipher(uint32_t password, char* in, char* out, int blockSize, char* ivFile);
 		~OFBCipher();
+		int checkOptions() override;
 	private:
-		uint32_t iv;
+		char* ivFile;
+		uint32_t* iv;
 		uint32_t* encryptBlock(uint32_t* block) override;
 		uint32_t* decryptBlock(uint32_t* block) override;
 	};
