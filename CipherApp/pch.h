@@ -2,6 +2,7 @@
 #define PCH_H
 
 #include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 #include <iostream>
 #include <fstream>
