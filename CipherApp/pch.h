@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
+#include "string.h"
 
 #include "Cipher.h"
 #include "MathCore.h"
