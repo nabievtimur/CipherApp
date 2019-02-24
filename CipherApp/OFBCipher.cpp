@@ -41,7 +41,7 @@ Crypt::OFBCipher::OFBCipher(uint32_t password, char * in, char * out, int blockS
 		int i = this->blockCount * 4;
 		while (i < size) {
 			int p = (i / 4) % this->blockCount; // Ïîçèöèÿ áëîêà â iv;
-			int b = i % 4 == 0 ? 0 : 4 - (i % 4); // Ïîçèöèÿ áàéòâ â áëîêå iv;
+			int b = i % 4 == 0 ? 0 : 4 - (i % 4); // Ïîçèöèÿ áàéòa â áëîêå iv;
 			char byte;
 			file >> byte;
 			uint32_t ivBlock = (unsigned char)byte << 8 * b;
@@ -57,21 +57,11 @@ uint32_t* Crypt::OFBCipher::encryptBlock(uint32_t* block) {
 		enBlock[i] = this->password ^ block[i] ^ this->iv[i];
 		this->iv[i] = this->iv[i] ^ block[i];
 	}
-	uint32_t b = enBlock[this->blockCount - 1] << 24;
-	uint32_t c = b;
-	for (int j = 0; j < this->blockCount; j++) {
-		c = enBlock[j] << 24;
-		enBlock[j] = b | (enBlock[j] >> 8);
-		b = c;
-	}
-	return enBlock;
+	return ñyclicShiftByteRight(enBlock);
 }
 
 uint32_t* Crypt::OFBCipher::decryptBlock(uint32_t * block) {
-	uint32_t* enBlock = new uint32_t[this->blockCount];
-	for (int i = this->blockCount - 1; i >= 0; i--) {
-		enBlock[i] = block[i] << 8 | block[(i + 1) % this->blockCount] >> 24;
-	}
+	uint32_t* enBlock = ñyclicShiftByteLeft(block);
 	for (int i = 0; i < this->blockCount; i++) {
 		enBlock[i] = this->password ^ enBlock[i] ^ this->iv[i];
 		this->iv[i] = this->iv[i] ^ enBlock[i];

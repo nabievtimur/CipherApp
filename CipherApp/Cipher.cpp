@@ -93,6 +93,48 @@ int Crypt::Cipher::checkOptions() {
 	return 0;
 }
 
+uint32_t* Crypt::Cipher::ñyclicShiftByteLeft(uint32_t* block) {
+	uint32_t* ROLblock = new uint32_t[this->blockCount];
+	for (int i = this->blockCount - 1; i >= 0; i--) {
+		ROLblock[i] = block[i] << 8 | block[(i + 1) % this->blockCount] >> 24;
+	}
+	return ROLblock;
+}
+
+uint32_t* Crypt::Cipher::ñyclicShiftByteRight(uint32_t* block) {
+	uint32_t* RORblock = new uint32_t[this->blockCount];
+	for (int i = 0; i < this->blockCount; i++) {
+		RORblock[i] = block[i] >> 8 | block[(i - 1) < 0 ? blockCount - 1 : i - 1] << 24;
+	}
+	return RORblock;
+}
+
+uint32_t* Crypt::Cipher::ñyclicShiftBitLeft(uint32_t* block, int count) {
+	count = count % 32;
+	uint32_t* ROLblock = new uint32_t[this->blockCount];
+	for (int i = this->blockCount - 1; i >= 0; i--) {
+		ROLblock[i] = block[i] << count | block[(i + 1) % this->blockCount] >> (32 - count);
+	}
+	return ROLblock;
+}
+
+uint32_t* Crypt::Cipher::ñyclicShiftBitRight(uint32_t* block, int count) {
+	count = count % 32;
+	uint32_t* RORblock = new uint32_t[this->blockCount];
+	for (int i = 0; i < this->blockCount; i++) {
+		RORblock[i] = block[i] >> count | block[(i - 1) < 0 ? blockCount - 1 : i - 1] << (32 - count);
+	}
+	return RORblock;
+}
+
+uint32_t * Crypt::Cipher::XOR(uint32_t * firstBlock, uint32_t * secondBlock) {
+	uint32_t* XORblock = new uint32_t[this->blockCount];
+	for (int i = 0; i < this->blockCount; i++) {
+		XORblock[i] = firstBlock[i] ^ secondBlock[i];
+	}
+	return XORblock;
+}
+
 uint32_t* Crypt::Cipher::encryptBlock(uint32_t* block) {
 	return block;
 }
